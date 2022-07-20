@@ -9,9 +9,16 @@ const Login = () => {
         event.preventDefault()
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
-        
+        const loginInfo = { email, password }
 
 
+        fetch('http://51.195.148.112/api/admin/auth/login', {
+            method: "POST",
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(loginInfo)
+        })
+            .then(res => res.json())
+            .then(data => console.log(data))
     }
 
     return (
