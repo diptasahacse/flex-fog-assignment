@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
-import Login from '../Login/Login';
 import { toast } from 'react-toastify';
+import Table from 'react-bootstrap/Table';
+import ProductRow from './ProductRow/ProductRow';
 const Dashboard = () => {
     const navigate = useNavigate();
     const token = authService.getCurrentUser();
@@ -33,8 +34,32 @@ const Dashboard = () => {
     console.log(products)
 
     return (
-        <div>
+        <div className='container'>
             <h1>Dashboard</h1>
+
+            {
+                products.length > 0 && <>
+                    <div>
+                        <Table striped bordered hover responsive size="sm">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Created At</th>
+                                    <th>Updated At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    products.map(product => <ProductRow product={product} key={product?.id}></ProductRow>)
+                                }
+                            </tbody>
+                        </Table>
+
+                    </div>
+                </>
+            }
+
         </div>
     );
 };
