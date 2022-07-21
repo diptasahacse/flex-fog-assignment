@@ -1,24 +1,67 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import {toast } from 'react-toastify';
+import axios from 'axios';
+import authService from '../../services/authService';
 const Login = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const emailRef = useRef();
     const passwordRef = useRef();
+    const navigate = useNavigate()
 
-    const loginHandler = (event) => {
+    const loginHandler = async (event) => {
         event.preventDefault()
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
-        const loginInfo = { email, password }
+        const loginInfo = { email, password };
+
+        try {
+            await authService.login(email, password).then(
+                () => {
+                    navigate("/");
+                },
+                (error) => {
+
+                    toast.error(error.message)
+                    // console.log(error);
+                }
+            );
+        } catch (err) {
+            console.log(err);
+        }
 
 
-        fetch('http://51.195.148.112/api/admin/auth/login', {
-            method: "POST",
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(loginInfo)
-        })
-            .then(res => res.json())
-            .then(data => console.log(data))
+        // axios.post('http://51.195.148.112/api/admin/auth/login', loginInfo)
+        //     .then(res => {
+        //         //get token from response
+        //         const token = res?.data?.token;
+        //         const user = res?.data?.admin?.name;
+
+        //         saveToken(user, token)
+        //         navigate('/')
+
+
+
+
+
+        //     })
+        //     .catch(err => console.log(err));
+
+
+        // post('/login', loginInfo)
+        //     .then(res => {
+        //         const token = res?.data?.token;
+        //         const user = res?.data?.admin?.name;
+
+
+        //     })
+
+
+
     }
 
     return (
@@ -39,6 +82,7 @@ const Login = () => {
                     <Button variant="primary" type="submit">
                         Submit
                     </Button>
+
                 </Form>
             </div>
 
